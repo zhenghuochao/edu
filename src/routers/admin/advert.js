@@ -9,32 +9,46 @@ const router= express.Router()
 
 router.get('/',(req,res,next) =>{
 
-const page =Number(req.query.page,10)
-const pageSize = 5
-	Advert
-		.find()
-		.skip( (page - 1) * pageSize)
-		.limit(pageSize)
-		.exec((err,adverts) => {
-		if(err) {
-			return next(err)
-		}
+	res.render("advert_list.html")
+// const page =Number(req.query.page,10)
+// const pageSize = 5
+// 	Advert
+// 		.find()
+// 		.skip( (page - 1) * pageSize)
+// 		.limit(pageSize)
+// 		.exec((err,adverts) => {
+// 		if(err) {
+// 			return next(err)
+// 		}
+// 		Advert.count((err,count) => {
+// 			if(err) {
+// 				return next(err)
+// 			}
+// 			const totalPage = Math.ceil(count / pageSize)
+
+// 			res.render('advert_list.html',{adverts,page,totalPage})
+// 		})
+
+
+		
+// 	})
+	
+})
+
+router.get('/count',(req,res,next) =>{
 		Advert.count((err,count) => {
 			if(err) {
 				return next(err)
 			}
-			const totalPage = Math.ceil(count / pageSize)
+			// const totalPage = Math.ceil(count / pageSize)
 
-			res.render('advert_list.html',{adverts,page,totalPage})
+			res.json({
+				err_code:0,
+				reslut:count
+			})
 		})
-
-
-		
-	})
-	
-	
-
 })
+
 router.get('/add',(req,res,next) =>{
 
 	res.render('advert_add.html')
@@ -42,16 +56,20 @@ router.get('/add',(req,res,next) =>{
 })
 
 router.get('/list',(req,res,next) =>{
-	Advert.find((err,docs) => {
-		if(err) {
-			return next(err)
-		}
-
-		res.json({
-		  	err_code:0,
-		  	data:docs
-		})
-
+	const page =Number.parseInt(req.query.page,10)
+	const pageSize = Number.parseInt(req.query.pageSize,10)
+		const advers =	Advert
+				.find()
+				.skip( (page - 1) * pageSize)
+				.limit(pageSize)
+				.exec((err,adverts) => {
+				if(err) {
+					return next(err)
+				}
+				res.json({
+					err_code:0,
+					reslut:adverts
+				})
 	})
 
 })
